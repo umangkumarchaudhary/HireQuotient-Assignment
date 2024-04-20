@@ -1,0 +1,32 @@
+
+  .tableHeaderCell {
+    width: 100vw; 
+  }
+  
+  .tableDataCell {
+    border-bottom: 2px solid blue; 
+  }
+  
+  .tableRow {
+    background-color: lightblue; 
+  }
+
+
+  .tableDataRowLightBlue {
+    background-color: lightblue;
+  }
+  
+  .tableDataRowWhite {
+    background-color: white;
+  }
+
+  .tableContainer {
+    width: 80%; 
+    margin: 0 auto; 
+  }
+  
+
+
+  
+  
+  
