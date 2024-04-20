@@ -1,51 +1,53 @@
-import React, { useEffect, useState , useMemo} from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
+import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import './HoldingsTable.css';
 
 const HoldingsTable = () => {
-    const [holdings, setHoldings] = useState([]);
-    const [expandedGroups, setExpandedGroups] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-      setLoading(true);
-      axios.get('https://canopy-frontend-task.now.sh/api/holdings')
-        .then(response => {
-          setHoldings(response.data.payload);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          setError('Failed to fetch data');
-          setLoading(false);
-        });
-    }, []);
+  const [holdings, setHoldings] = useState([]);
+  const [expandedGroups, setExpandedGroups] = useState({});
+  const [loading, setLoading] = useState(true); // Set default to true
+  const [error, setError] = useState(null);
 
-    const groupedHoldings = useMemo(() => {
-        return holdings.reduce((acc, holding) => {
-          const { asset_class } = holding;
-          if (!acc[asset_class]) {
-            acc[asset_class] = [];
-          }
-          acc[asset_class].push(holding);
-          return acc;
-        }, {});
-      }, [holdings]);
-    
-      const toggleExpansion = (assetClass) => {
-        setExpandedGroups(prevState => ({
-          ...prevState,
-          [assetClass]: !prevState[assetClass]
-        }));
-      };
-  
-  
-    if (error) {
-      return <div>{error}</div>;
-    }
+  useEffect(() => {
+    axios.get('https://canopy-frontend-task.now.sh/api/holdings')
+      .then(response => {
+        setHoldings(response.data.payload);
+        setLoading(false); // Set loading to false after data is fetched
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data');
+        setLoading(false); // Set loading to false even if there is an error
+      });
+  }, []);
+
+  const groupedHoldings = useMemo(() => {
+    return holdings.reduce((acc, holding) => {
+      const { asset_class } = holding;
+      if (!acc[asset_class]) {
+        acc[asset_class] = [];
+      }
+      acc[asset_class].push(holding);
+      return acc;
+    }, {});
+  }, [holdings]);
+
+  const toggleExpansion = (assetClass) => {
+    setExpandedGroups(prevState => ({
+      ...prevState,
+      [assetClass]: !prevState[assetClass]
+    }));
+  };
+
+  if (loading) {
+    return <CircularProgress />; 
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
   
   
 
